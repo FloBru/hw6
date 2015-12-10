@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void func(double* y, const int a, const int b, const double c);
+void func(double* y, double* k, const int a, const int b, const double c);
      
 int main() {
     double y[3];   //x`=y(0), y`=y(1), z`=y(2)
@@ -13,7 +13,7 @@ int main() {
     y[1] = 1;
     y[2] = 1;
     double tz = 1.0; //Zeitendwert
-    int N = 10; //Anzahl der Schritte
+    int N = 100000; //Anzahl der Schritte
     double dt = tz/N; //Schrittweite
     double k1[3];  //4k mit 3 Dimensionen
     double k2[3];
@@ -33,40 +33,28 @@ int main() {
         temp[0] = y[0];
         temp[1] = y[1];
         temp[2] = y[2];
-        func(temp, a, b, c);
-        k1[0] = temp[0];
-        k1[1] = temp[1];
-        k1[2] = temp[2];
-        cout << dt*i <<"\t"<< k1[0] << endl;
-         cout << dt*i <<"\t"<< k1[1] << endl;
-          cout << dt*i <<"\t"<< k1[2] << endl;
+        func(temp, k1, a, b, c);
+    
         //k2
         temp[0] = y[0] + (dt/2)*k1[0];
         temp[1] = y[1] + (dt/2)*k1[1];
         temp[2] = y[2] + (dt/2)*k1[2];
-        func(temp, a, b, c);
-        k2[0] = temp[0];
-        k2[1] = temp[1];
-        k2[2] = temp[2];
+        func(temp, k2, a, b, c);
+
         
         //k3
         temp[0] = y[0] + (dt/2)*k2[0];
         temp[1] = y[1] + (dt/2)*k2[1];
         temp[2] = y[2] + (dt/2)*k2[2];
-        func(temp, a, b, c);
-        k3[0] = temp[0];
-        k3[1] = temp[1];
-        k3[2] = temp[2];
+        func(temp, k3, a, b, c);
         
         //k4
         temp[0] = y[0] + dt*k3[0];
         temp[1] = y[1] + dt*k3[1];
         temp[2] = y[2] + dt*k3[2];
-        func(temp, a, b, c);
-        k4[0] = temp[0];
-        k4[1] = temp[1];
-        k4[2] = temp[2];
-        
+        func(temp, k4, a, b, c);
+    
+        //yn+1
         for (int j = 0; j <3; j++){
             y[j] += dt*((1./6)*k1[j]+(1./3)*k2[j]+(1./3)*k3[j]+(1./6)*k4[j]);
         }
@@ -78,12 +66,10 @@ int main() {
     return 0;
 }
     
-    
-    
 //lorenzmodell
-void func(double* y, const int a, const int b, const double c){
-    double* t = y;
-    y[0] = a*(t[1]-t[0]);
-    y[1] = t[0]*(b-t[2])-t[1];
-    y[2] = t[0]*t[1]-c*t[2];
+void func(double* y, double* k, const int a, const int b, const double c){
+    //k1 = f(y)...
+    k[0] = a*(y[1]-y[0]);
+    k[1] = y[0]*(b-y[2])-y[1];
+    k[2] = y[0]*y[1]-c*y[2];
 }
