@@ -12,8 +12,8 @@ int main() {
     y[0] = 1; //Startwerte
     y[1] = 1;
     y[2] = 1;
-    double tz = 1.0; //Zeitendwert
-    int N = 100000; //Anzahl der Schritte
+    double tz = 100; //Zeitendwert
+    int N = 10000; //Anzahl der Schritte
     double dt = tz/N; //Schrittweite
     double k1[3];  //4k mit 3 Dimensionen
     double k2[3];
